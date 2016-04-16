@@ -1,7 +1,10 @@
 
 if PAC_EDITOR_INITED_PAC then return end
 
-if SERVER then				
+if SERVER then		
+
+	resource.AddWorkshop("104691717")
+		
 	local function add_files(dir)
 		local files, folders = file.Find(dir .. "*", "LUA")
 		

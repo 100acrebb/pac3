@@ -12,6 +12,15 @@ pac.LocalPlayer = LocalPlayer()
 pac.RealTime = 0
 pac.FrameNumber = 0
 
+local HidePACSOf = {}
+
+net.Receive( "HIDEPAC4ME" , function()
+	local stid = net.ReadString()
+	local hidepac = net.ReadBool()
+	HidePACSOf[stid] = hidepac
+end)
+			
+
 local sort = function(a, b)
 	if a and b then 
 		if a.DrawOrder and b.DrawOrder then
@@ -451,11 +460,16 @@ function pac.PostDrawOpaqueRenderables(drawdepth,drawing_skybox)
 				end
 			end
 			
+			local hideThisPAC = false
+			if ent:IsPlayer() then
+				hideThisPAC =  HidePACSOf[ ent:SteamID() ] or false
+			end
+			
 			if not ent:IsPlayer() and not ent:IsNPC() then
 				radius = radius * 4
 			end
 			
-			if 	
+			if 	!hideThisPAC and (
 				draw_dist == -1 or
 				ent.IsPACWorldEntity or
 				(ent == pac.LocalPlayer and ent:ShouldDrawLocalPlayer() or (ent.pac_camera and ent.pac_camera:IsValid())) or
@@ -467,7 +481,7 @@ function pac.PostDrawOpaqueRenderables(drawdepth,drawing_skybox)
 						(ent.pac_draw_distance and (ent.pac_draw_distance <= 0 or ent.pac_draw_distance < dst)) or
 						(dst < draw_dist)
 					)
-				)
+				))
 			then 
 				ent.pac_model = ent:GetModel() -- used for cached functions
 					
