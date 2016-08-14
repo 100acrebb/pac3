@@ -462,7 +462,12 @@ function pac.PostDrawOpaqueRenderables(drawdepth,drawing_skybox)
 			
 			local hideThisPAC = false
 			if ent:IsPlayer() then
-				hideThisPAC =  HidePACSOf[ ent:SteamID() ] or false
+				--hideThisPAC =  HidePACSOf[ ent:SteamID() ] or false
+				--hideThisPAC = hideThisPAC or ent:GetNWBool("PACOFF", false)
+				--hideThisPAC = hideThisPAC or LocalPlayer:GetNWBool( "HIDEPACS", false)
+				
+				
+				hideThisPAC =  ((HidePACSOf[ ent:SteamID() ] or false) or ent:GetNWBool("PACOFF", false)) or pac.LocalPlayer:GetNWBool( "HIDEPACS", false)
 			end
 			
 			if not ent:IsPlayer() and not ent:IsNPC() then
